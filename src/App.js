@@ -1,26 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {useState, useRef} from 'react'
+import Mandelbrot from './components/Mandelbrot';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const App = () => {
+    const [steps, setSteps] = useState(3)
+    const canvas = useRef(null)
+
+    const onClickNextStepButton = () => {
+        if (steps === 12) {
+            setSteps(3)
+        } else {
+            setSteps(steps + 1)
+        }
+    }
+
+    return (
+        <Mandelbrot
+            steps={steps}
+            onClickNextStepButton={onClickNextStepButton}
+            canvas={canvas}
+        />
+    )
 }
 
-export default App;
+export default App
