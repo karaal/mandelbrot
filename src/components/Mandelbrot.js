@@ -1,4 +1,4 @@
-import React, {useRef, useEffect} from 'react'
+import React, { useEffect } from 'react'
 
 class C {
     constructor(re, im) {
@@ -6,18 +6,22 @@ class C {
         this.im = im
     }
 
-    power2() {
-        const pow = new C(0,0)
-        pow.re = (this.re*this.re) - (this.im*this.im)
-        pow.im = 2 * this.re * this.im
-        return pow
+    /**
+     * @mutable
+     */
+    power2_mut() {
+        const re = this.re
+        const im = this.im
+        this.re = (re*re) - (im*im)
+        this.im = 2 * re * im
     }
 
-    add(c) {
-        const sum = new C(0,0)
-        sum.re = this.re + c.re
-        sum.im = this.im + c.im
-        return sum
+    /**
+     * @mutable
+     */
+    add_mut(c) {
+        this.re += c.re
+        this.im += c.im
     }
 
     length() {
@@ -27,16 +31,16 @@ class C {
 
 const Mandelbrot = ({steps, onClickNextStepButton, canvas}) => {
 
-    const width = 271
-    const height = 237
+    const width = 540
+    const height = 460
 
     const mandelbrotNumber = (c) => {
 
         let z = new C(0, 0)
         var i
         for (i = 0; i < steps; i++) {
-            z = z.power2()
-            z = z.add(c)
+            z.power2_mut()
+            z.add_mut(c)
             const len = z.length()
             if (len > 2) {
                 return i
@@ -49,10 +53,12 @@ const Mandelbrot = ({steps, onClickNextStepButton, canvas}) => {
     useEffect(() => {
         const context = canvas.current.getContext("2d")
         let c, re, im
-        for (re = -2.0; re < 0.7; re += 0.01) {
-            for (im = -1.18; im < 1.18; im += 0.01) {
-                context.clearRect(re*100 + 200, im*100 + 118, 1, 1)
-                c = new C(re, im)
+        c = new C(0, 0)
+        for (re = -2.0; re < 0.7; re += 0.005) {
+            for (im = -1.18; im < 1.18; im += 0.005) {
+                c.re = re
+                c.im = im
+                context.clearRect(re*200 + 400, im*200 + 230, 1, 1)
                 let num = mandelbrotNumber(c)
                 if (num === false) {
                     context.fillStyle = 'black'
@@ -61,6 +67,7 @@ const Mandelbrot = ({steps, onClickNextStepButton, canvas}) => {
                         case 0:
                         case 1:
                         case 2:
+                        default:
                             context.fillStyle = 'blue'
                             break
                         case 3:
@@ -93,9 +100,12 @@ const Mandelbrot = ({steps, onClickNextStepButton, canvas}) => {
                         case 12:
                             context.fillStyle = '#24cdc1'
                             break
+                        case 13:
+                            context.fillStyle = 'yellow'
+                            break
                     }
                 }
-                context.fillRect(re*100 + 200, im*100 + 118, 1, 1)
+                context.fillRect(re*200 + 400, im*200 + 230, 1, 1)
             }
         }
     })

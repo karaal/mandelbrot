@@ -6,7 +6,7 @@ const App = () => {
     const canvas = useRef(null)
 
     const onClickNextStepButton = () => {
-        if (steps === 12) {
+        if (steps === 15) {
             setSteps(3)
         } else {
             setSteps(steps + 1)
